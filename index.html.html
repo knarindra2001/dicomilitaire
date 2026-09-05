@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dictionnaire de la terminologie militaire - OMP & Mission Humanitaire</title>
+    <style>
+        :root {
+            --primary-color: #1b365d;
+            --accent-color: #c8102e;
+            --bg-color: #ffffff;
+            --card-bg: #f8f9fa;
+            --border-color: #e2e8f0;
+            --text-main: #1a202c;
+            --text-muted: #718096;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px 10px;
+        }
+
+        /* Login Screen */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #1b365d 0%, #0d1b2a 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .login-card {
+            background: #ffffff;
+            padding: 35px 30px;
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .login-card h2 {
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1.4rem;
+        }
+
+        .login-card p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 25px;
+        }
+
+        .login-card input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .login-card input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .login-card button {
+            width: 100%;
+            padding: 12px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .login-card button:hover {
+            background: #102342;
+        }
+
+        .error-msg {
+            color: var(--accent-color);
+            font-size: 0.85rem;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* Main Container */
+        .app-container {
+            width: 100%;
+            max-width: 850px;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            display: none;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1b365d 0%, #2b4c7e 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-color);
+        }
+
+        header h1 {
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            line-height: 1.3;
+        }
+
+        header .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 300;
+            margin-bottom: 4px;
+        }
+
+        header .mission {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        header .author {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Search Section */
+        .search-section {
+            padding: 25px 20px 15px 20px;
+            background: #ffffff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .search-box {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 45px 14px 45px;
+            font-size: 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: 30px;
+            outline: none;
+            transition: all 0.2s;
+            background-color: #f8fafc;
+        }
+
+        .search-box input:focus {
+            border-color: var(--primary-color);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(27, 54, 93, 0.1);
+        }
+
+        .search-box .search-icon {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: var(--text-muted);
+        }
+
+        .search-box .clear-icon {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: none;
+        }
+
+        .stats {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Content List */
+        .content-area {
+            padding: 20px;
+        }
+
+        .dictionary-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .dictionary-item {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 14px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .dictionary-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-color: #cbd5e1;
+        }
+
+        .lang-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 1rem;
+            line-height: 1.4;
+        }
+
+        .flag-icon {
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .lang-text {
+            flex-grow: 1;
+        }
+
+        .lang-text.ind {
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .lang-text.fr {
+            color: #2d3748;
+        }
+
+        .divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 2px 0;
+            opacity: 0.6;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border-color);
+            background: #fafafa;
+        }
+
+        @media (min-width: 640px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .dictionary-item {
+                padding: 16px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Login Modal -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-card">
+            <h2>🔐 Mot de passe</h2>
+            <p>Veuillez saisir le mot de passe pour accéder au dictionnaire.</p>
+            <form onsubmit="checkPassword(event)">
+                <input type="password" id="passwordInput" placeholder="Saisir le mot de passe..." autofocus required>
+                <button type="submit">Entrer</button>
+            </form>
+            <div class="error-msg" id="errorMsg">Mot de passe incorrect!</div>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div class="app-container" id="appContainer">
+        <header>
+            <h1>Dictionnaire de la terminologie militaire</h1>
+            <div class="subtitle">Opération Maintien de la Paix (OMP)</div>
+            <div class="mission">Mission Humanitaire</div>
+            <div class="author">Créé par : KSN</div>
+        </header>
+
+        <div class="search-section">
+            <div class="search-box">
+                <span class="search-icon">🔎</span>
+                <input type="text" id="searchInput" placeholder="Recherche (Bahasa Indonesia / Français)..." oninput="handleSearch()">
+                <span class="clear-icon" id="clearBtn" onclick="clearSearch()">✖</span>
+            </div>
+            <div class="stats" id="statsText">Chargement des données...</div>
+        </div>
+
+        <div class="content-area">
+            <div class="dictionary-list" id="dictionaryList"></div>
+        </div>
+
+        <footer>
+            Dictionnaire de la terminologie militaire OMP & Mission Humanitaire &copy; 2026 - Créé par KSN
+        </footer>
+    </div>
+
+    <script>
+        const entries = [{"ind": "Angkatan", "fr": "Force", "category": "Alpha"}, {"ind": "AAL", "fr": "Ecole Naval", "category": "Alpha"}, {"ind": "AAU", "fr": "Ecole de l’air", "category": "Alpha"}, {"ind": "AD, angkatan darat", "fr": "Armée", "category": "Alpha"}, {"ind": "ADC", "fr": "Aide de camp", "category": "Alpha"}, {"ind": "Airborne", "fr": "Aéroporté", "category": "Alpha"}, {"ind": "Administrasi umum", "fr": "Administration général", "category": "Alpha"}, {"ind": "AGHT, ancaman, gangguan, hambatan, tantangan", "fr": "Menaces de troubles, d’actes d’opposition et de résistance", "category": "Alpha"}, {"ind": "Ajudan jenderal", "fr": "Chef des services administratifs", "category": "Alpha"}, {"ind": "Ajudan jenderal (corps)", "fr": "Chancellerie", "category": "Alpha"}, {"ind": "Akademi militer", "fr": "Académie militaire", "category": "Alpha"}, {"ind": "AL", "fr": "Marine Nationale", "category": "Alpha"}, {"ind": "Alat instruksi", "fr": "Matériel Pédagogique", "category": "Alpha"}, {"ind": "Alkes, alat kesehatan", "fr": "Instrument médicaux", "category": "Alpha"}, {"ind": "Alkom, alat komunikasi", "fr": "Appareil de communication", "category": "Alpha"}, {"ind": "Alpal, alat peralatan", "fr": "Equipement, matériel", "category": "Alpha"}, {"ind": "Alutsista", "fr": "Matériel principal de la défense", "category": "Alpha"}, {"ind": "Anak buah", "fr": "Personnel organique", "category": "Alpha"}, {"ind": "Anti-gerilya", "fr": "Contre-guérilla", "category": "Alpha"}, {"ind": "Anti Serangan Udara", "fr": "Anti Aérienne", "category": "Alpha"}, {"ind": "Appel pagi", "fr": "Appel du matin", "category": "Alpha"}, {"ind": "Arhanud", "fr": "Artillerie sol-air", "category": "Alpha"}, {"ind": "Arhanudri", "fr": "Artillerie sol-air léger", "category": "Alpha"}, {"ind": "Arhanudse", "fr": "Artillerie sol-air moyen", "category": "Alpha"}, {"ind": "Armabar", "fr": "Flotte occidentale", "category": "Alpha"}, {"ind": "Armatim", "fr": "Flotte orientale", "category": "Alpha"}, {"ind": "Armed", "fr": "Artillerie sol-sol", "category": "Alpha"}, {"ind": "Artileri bantuan", "fr": "Artillerie d’appui", "category": "Alpha"}, {"ind": "Asintel", "fr": "Adjoint renseignement", "category": "Alpha"}, {"ind": "Aslog", "fr": "Adjoint logistique", "category": "Alpha"}, {"ind": "Asops", "fr": "Adjoint d’opération", "category": "Alpha"}, {"ind": "Aspam", "fr": "Adjoint sécurité", "category": "Alpha"}, {"ind": "Aspers", "fr": "Adjoint personnel", "category": "Alpha"}, {"ind": "Asrama", "fr": "Caserne", "category": "Alpha"}, {"ind": "Atasan", "fr": "Supérieur", "category": "Alpha"}, {"ind": "Athan", "fr": "Attaché de défense", "category": "Alpha"}, {"ind": "Atmil", "fr": "Attaché militaire", "category": "Alpha"}, {"ind": "AU", "fr": "Armée de l’air", "category": "Alpha"}, {"ind": "Ba, Bintara", "fr": "Sous-officier", "category": "Bravo"}, {"ind": "Babek", "fr": "Service de ravitaillement", "category": "Bravo"}, {"ind": "Babinsa", "fr": "Sous-officier chef de village", "category": "Bravo"}, {"ind": "Bahan Bakar", "fr": "Carburant", "category": "Bravo"}, {"ind": "Bahan peledak", "fr": "Matière explosive", "category": "Bravo"}, {"ind": "BAIS", "fr": "Service de renseignement stratégique", "category": "Bravo"}, {"ind": "Balakpus", "fr": "Organe exécutif central", "category": "Bravo"}, {"ind": "Bantuan tembak", "fr": "Appui-feu", "category": "Bravo"}, {"ind": "Bantuan tempur", "fr": "Elément d’appui-Feu", "category": "Bravo"}, {"ind": "Batalion Prancis", "fr": "Bataillon français", "category": "Bravo"}, {"ind": "Batalion Buru Alpen", "fr": "Bataillon de chasseurs Alpins", "category": "Bravo"}, {"ind": "Batalion Komando dan bantuan", "fr": "Bataillon de commandement et de soutien", "category": "Bravo"}, {"ind": "Batalion Pemburu", "fr": "Bataillon de chasseurs", "category": "Bravo"}, {"ind": "Baterai Komando dan Pelayanan", "fr": "Batterie de commandement et des services", "category": "Bravo"}, {"ind": "Bengrah, bengkel daerah", "fr": "Atelier régional", "category": "Bravo"}, {"ind": "Binlat", "fr": "Montage d’exercice", "category": "Bravo"}, {"ind": "Binmas", "fr": "Formation de population", "category": "Bravo"}, {"ind": "Binroh", "fr": "Formation religieuse", "category": "Bravo"}, {"ind": "Binsat", "fr": "Gestion d’une unité", "category": "Bravo"}, {"ind": "Bintang gerilya", "fr": "Etoile de la guérilla", "category": "Bravo"}, {"ind": "Bintang jasa", "fr": "Etoile du service", "category": "Bravo"}, {"ind": "BKO", "fr": "Sous contrôle opérationnel", "category": "Bravo"}, {"ind": "Bn, bataillon", "fr": "Bataillon", "category": "Bravo"}, {"ind": "Bobi trap", "fr": "Mine anti-personnel", "category": "Bravo"}, {"ind": "Brigade", "fr": "Brigade", "category": "Bravo"}, {"ind": "Brigade infanteri", "fr": "Brigade d’infanterie", "category": "Bravo"}, {"ind": "Brigade kavaleri", "fr": "Brigade de cavalerie", "category": "Bravo"}, {"ind": "Brigade lintas udara", "fr": "Brigade aéroportée", "category": "Bravo"}, {"ind": "Brigade mobil", "fr": "Brigade mobile", "category": "Bravo"}, {"ind": "Brigadir Jenderal", "fr": "Général de brigade", "category": "Bravo"}, {"ind": "Brigif linud", "fr": "Brigade Parachutiste", "category": "Bravo"}, {"ind": "Brevet danmen pasukan pegunungan", "fr": "Brevet de chef de détachement de haute montagne", "category": "Bravo"}, {"ind": "Buser, buru sergap", "fr": "Intercepteur", "category": "Bravo"}, {"ind": "Cab, cabang", "fr": "Branche, subdivision", "category": "Charlie"}, {"ind": "Caba, calon bintara", "fr": "Elève sous-officier", "category": "Charlie"}, {"ind": "Cabang tempur", "fr": "Armée de mêlée", "category": "Charlie"}, {"ind": "Capa, calon perwira", "fr": "Aspirant", "category": "Charlie"}, {"ind": "Cap dinas", "fr": "Cachet officiel", "category": "Charlie"}, {"ind": "Capeg, calon pegawai", "fr": "Elève-fonctionnaire", "category": "Charlie"}, {"ind": "Caraka", "fr": "Agent de liaison, estafette", "category": "Charlie"}, {"ind": "Catam, calon tamtama", "fr": "Recrue", "category": "Charlie"}, {"ind": "Catar, Calon taruna", "fr": "Elève-officier", "category": "Charlie"}, {"ind": "CB, cara bertindak", "fr": "Mode d’action", "category": "Charlie"}, {"ind": "Cegah tangkal", "fr": "Dissuader", "category": "Charlie"}, {"ind": "CHB", "fr": "Armée de transmission", "category": "Charlie"}, {"ind": "CHK", "fr": "Justice militaire", "category": "Charlie"}, {"ind": "CKM", "fr": "Service de santé des armées", "category": "Charlie"}, {"ind": "CKU", "fr": "Corps financier", "category": "Charlie"}, {"ind": "CPL", "fr": "Armée du matériel", "category": "Charlie"}, {"ind": "CPM", "fr": "Prévôté", "category": "Charlie"}, {"ind": "CTP", "fr": "Service de la cartographie", "category": "Charlie"}, {"ind": "CZI", "fr": "Armée du génie", "category": "Charlie"}, {"ind": "Co, commando", "fr": "Commandement", "category": "Charlie"}, {"ind": "Corps Pasukan Artileri", "fr": "Artillerie de corps d’armée", "category": "Charlie"}, {"ind": "Daerah militer", "fr": "Région militaire", "category": "Delta"}, {"ind": "Daerah operasi tempur", "fr": "Zone d’engagement", "category": "Delta"}, {"ind": "Daerah perbatasan", "fr": "Zone frontalière", "category": "Delta"}, {"ind": "Daerah persiapan", "fr": "Zone de préparatifs", "category": "Delta"}, {"ind": "Daerah rawan", "fr": "Zone clé", "category": "Delta"}, {"ind": "Daerah terlarang", "fr": "Zone à circulation contrôlée", "category": "Delta"}, {"ind": "Daftar isian proyek", "fr": "Liste des projets", "category": "Delta"}, {"ind": "Dalmas", "fr": "Direction des masses", "category": "Delta"}, {"ind": "Dana", "fr": "Subvention", "category": "Delta"}, {"ind": "Danbrig", "fr": "Commandant de brigade", "category": "Delta"}, {"ind": "Danden", "fr": "Chef de détachement", "category": "Delta"}, {"ind": "Dandenma", "fr": "Chef de détachement de quartier général", "category": "Delta"}, {"ind": "Dandim", "fr": "Commandant de district militaire", "category": "Delta"}, {"ind": "Danjen", "fr": "Commandant général", "category": "Delta"}, {"ind": "Danki", "fr": "Commandant de compagnie", "category": "Delta"}, {"ind": "Dankorsik", "fr": "Commandant de la musique", "category": "Delta"}, {"ind": "Dankorsis", "fr": "Commandant de promotion", "category": "Delta"}, {"ind": "Danlanal", "fr": "Commandant de la base navale", "category": "Delta"}, {"ind": "Danmen", "fr": "Commandant de régiment", "category": "Delta"}, {"ind": "Danmentar", "fr": "Commandant de régiment de cadets", "category": "Delta"}, {"ind": "Danrai", "fr": "Commandant de batterie", "category": "Delta"}, {"ind": "Danramil", "fr": "Commandant de rayon", "category": "Delta"}, {"ind": "Danrem", "fr": "Commandant de division militaire", "category": "Delta"}, {"ind": "Danru", "fr": "Chef d’équipe", "category": "Delta"}, {"ind": "Dansat", "fr": "Commandant d’unité", "category": "Delta"}, {"ind": "Dansesko", "fr": "Commandant de l’école d’état major et de commandement", "category": "Delta"}, {"ind": "Danton", "fr": "Chef de peloton", "category": "Delta"}, {"ind": "Danup", "fr": "Chef de cérémonie", "category": "Delta"}, {"ind": "Danyon", "fr": "Chef de bataillon", "category": "Delta"}, {"ind": "Demolisi bawah air", "fr": "Destruction sous-marine", "category": "Delta"}, {"ind": "Denma", "fr": "Détachement d’état major", "category": "Delta"}, {"ind": "Dewan kehormatan militer", "fr": "Conseil de discipline", "category": "Delta"}, {"ind": "Dikbangum", "fr": "Instruction sur le développement général", "category": "Delta"}, {"ind": "Diklapa", "fr": "Instruction supérieure des officiers", "category": "Delta"}, {"ind": "Diktuk", "fr": "Formation", "category": "Delta"}, {"ind": "Dinas Jaga", "fr": "Service de garde", "category": "Delta"}, {"ind": "Dirjen", "fr": "Directeur général", "category": "Delta"}, {"ind": "Dirlat", "fr": "Directeur d’exercice", "category": "Delta"}, {"ind": "Dirmin", "fr": "Directeur d’administration", "category": "Delta"}, {"ind": "Disersi", "fr": "Désertion", "category": "Delta"}, {"ind": "Dishub", "fr": "Service des transmissions", "category": "Delta"}, {"ind": "Diskum", "fr": "Service juridique", "category": "Delta"}, {"ind": "Dislurja", "fr": "Service des affectations et de la préparation à l’emploi", "category": "Delta"}, {"ind": "Disposal", "fr": "Déclassement", "category": "Delta"}, {"ind": "Ditajenad", "fr": "Direction de la chancellerie", "category": "Delta"}, {"ind": "Epolet", "fr": "Epaulette", "category": "Echo"}, {"ind": "Eselon", "fr": "Echelon", "category": "Echo"}, {"ind": "Evakuasi medik udara", "fr": "Evacuation médicale aérienne", "category": "Echo"}, {"ind": "Evakuasi udara darurat", "fr": "Evacuation aérienne d’urgence", "category": "Echo"}, {"ind": "Evakuasi udara taktis", "fr": "Evacuation aérienne tactique", "category": "Echo"}, {"ind": "Faktor keamanan", "fr": "Facteur sécurité", "category": "Foxtrot"}, {"ind": "Fasharkan", "fr": "Ateliers d’entretien et de réparation", "category": "Foxtrot"}, {"ind": "Formasi tempur", "fr": "Formation de combat", "category": "Foxtrot"}, {"ind": "GA, garis awal", "fr": "Ligne avant, ligne de départ", "category": "Golf"}, {"ind": "Gab, gabungan", "fr": "Inter-armée", "category": "Golf"}, {"ind": "Gangguan keamanan", "fr": "Troubles de l’ordre public", "category": "Golf"}, {"ind": "Garis batas tembakan", "fr": "Ligne de limite des tirs", "category": "Golf"}, {"ind": "Garis depan", "fr": "Front du dispositif", "category": "Golf"}, {"ind": "Garnisun", "fr": "Garnison", "category": "Golf"}, {"ind": "Gas air mata", "fr": "Gaz lacrymogène", "category": "Golf"}, {"ind": "Gati, tenaga pengganti", "fr": "Renforts", "category": "Golf"}, {"ind": "Geladi", "fr": "Exercice", "category": "Golf"}, {"ind": "Geladi bersih", "fr": "Dernière répétition", "category": "Golf"}, {"ind": "Geladi kotor", "fr": "Répétitions d’exercice", "category": "Golf"}, {"ind": "Gencatan senjata", "fr": "Cessez-le-feu", "category": "Golf"}, {"ind": "GOM", "fr": "Opération Militaire", "category": "Golf"}, {"ind": "Granat serangan", "fr": "Grenade offensive", "category": "Golf"}, {"ind": "Grasi", "fr": "Grâce (octroyée par une autorité)", "category": "Golf"}, {"ind": "Gumil", "fr": "Professeur militaire", "category": "Golf"}, {"ind": "Hadap kanan (kiri) gerak !", "fr": "A droite (gauche) … droite (gauche) !", "category": "Hotel"}, {"ind": "Hakim militer", "fr": "Juge militaire", "category": "Hotel"}, {"ind": "Hansip", "fr": "Défense civile", "category": "Hotel"}, {"ind": "Henti… gerak !", "fr": "Halte ! (ordre serré)", "category": "Hotel"}, {"ind": "Hormat gerak !", "fr": "Saluez !", "category": "Hotel"}, {"ind": "Hormat senjata gerak !", "fr": "Présentez, armes !", "category": "Hotel"}, {"ind": "Hubdam", "fr": "Transmission régionale", "category": "Hotel"}, {"ind": "Hukum", "fr": "Droit", "category": "Hotel"}, {"ind": "Hukuman", "fr": "Punition", "category": "Hotel"}, {"ind": "Hukum perang", "fr": "Les lois de la guerre", "category": "Hotel"}, {"ind": "Huru hara", "fr": "Emeute", "category": "Hotel"}, {"ind": "Idik, penyidikan", "fr": "Enquête", "category": "India"}, {"ind": "Ifgaba, infanteri gaya baru", "fr": "Infanterie nouveau style", "category": "India"}, {"ind": "Ikatan dinas", "fr": "Lien au service", "category": "India"}, {"ind": "Induk pasukan", "fr": "Gros des forces", "category": "India"}, {"ind": "Informan", "fr": "Informateur", "category": "India"}, {"ind": "Inpres", "fr": "Instruction présidentielle", "category": "India"}, {"ind": "Itjen", "fr": "Inspectorat général", "category": "India"}, {"ind": "Irjen", "fr": "Inspecteur général", "category": "India"}, {"ind": "Intelijen", "fr": "Renseignement", "category": "India"}, {"ind": "Jab, jabatan", "fr": "Poste, fonction", "category": "Juliette"}, {"ind": "Jahril", "fr": "Bien-être et moral", "category": "Juliette"}, {"ind": "Jam « J »", "fr": "Heure « H »", "category": "Juliette"}, {"ind": "Jam malam", "fr": "Couvre-feu", "category": "Juliette"}, {"ind": "Jammer", "fr": "Brouilleur", "category": "Juliette"}, {"ind": "Jamming", "fr": "Brouillage", "category": "Juliette"}, {"ind": "Jasmil, jasmani militer", "fr": "Education physique militaire", "category": "Juliette"}, {"ind": "Jubir", "fr": "Porte-parole", "category": "Juliette"}, {"ind": "Juk, petunjuk", "fr": "Règlement, guide", "category": "Juliette"}, {"ind": "Jukminu", "fr": "Règlement administration général", "category": "Juliette"}, {"ind": "Juknik", "fr": "Manuel technique", "category": "Juliette"}, {"ind": "Juru bayar", "fr": "Comptable", "category": "Juliette"}, {"ind": "Kadep", "fr": "Chef du département", "category": "Kilo"}, {"ind": "Kadis", "fr": "Chef du service", "category": "Kilo"}, {"ind": "Kadisdik", "fr": "Chef du service d’instruction", "category": "Kilo"}, {"ind": "Kadiskum", "fr": "Chef du service juridique", "category": "Kilo"}, {"ind": "Kadislitbang", "fr": "Chef du service de recherche et développement", "category": "Kilo"}, {"ind": "Kadispam", "fr": "Chef de service de la sécurité", "category": "Kilo"}, {"ind": "Kadispen", "fr": "Chef du service d’information", "category": "Kilo"}, {"ind": "Kaldik", "fr": "Calendrier d’instruction", "category": "Kilo"}, {"ind": "Kamling", "fr": "Sécurité du milieu", "category": "Kilo"}, {"ind": "Kamp tawanan perang", "fr": "Camp de prisonniers", "category": "Kilo"}, {"ind": "Kamra", "fr": "Sécurité populaire", "category": "Kilo"}, {"ind": "Kamtib", "fr": "Ordre et sécurité", "category": "Kilo"}, {"ind": "Kantor Penyiaran bahaya nuklir", "fr": "Bureau de diffusion d’alerte", "category": "Kilo"}, {"ind": "Kamuflase", "fr": "Camouflage", "category": "Kilo"}, {"ind": "Kapal angkut ran lapis baja", "fr": "Bâtiment de débarquement de char", "category": "Kilo"}, {"ind": "Kapal induk", "fr": "Porte-avions", "category": "Kilo"}, {"ind": "Kapal Komando dan Perbekalan", "fr": "Bâtiment de Commandement et Ravitaillement", "category": "Kilo"}, {"ind": "Kapal patroli", "fr": "Patrouilleur", "category": "Kilo"}, {"ind": "Kapal penyapu ranjau", "fr": "Dragueur de mines", "category": "Kilo"}, {"ind": "Kapal selam", "fr": "Sous-marin", "category": "Kilo"}, {"ind": "Kapal selam torpedo", "fr": "Sous-marin lance-torpilles", "category": "Kilo"}, {"ind": "Kapomdam", "fr": "Chef régional de la police militaire", "category": "Kilo"}, {"ind": "Kaporlap", "fr": "Paquetage individuel", "category": "Kilo"}, {"ind": "Kapten", "fr": "Capitaine", "category": "Kilo"}, {"ind": "Kapus", "fr": "Chef de centre", "category": "Kilo"}, {"ind": "Kapuspen", "fr": "Chef de centre d’information", "category": "Kilo"}, {"ind": "Karangan militer", "fr": "Composition militaire", "category": "Kilo"}, {"ind": "Karbol", "fr": "Carbol", "category": "Kilo"}, {"ind": "Karo", "fr": "Chef de bureau", "category": "Kilo"}, {"ind": "Kartu Petunjuk Istri", "fr": "Carte d’épouse de militaire", "category": "Kilo"}, {"ind": "Kasad", "fr": "Chef d’état major de l’armée de terre (Cemat)", "category": "Kilo"}, {"ind": "Kasal", "fr": "Chef d’état major de la marine (Cemm)", "category": "Kilo"}, {"ind": "Kasau", "fr": "Chef d’état major de l’armée de l’air (Cemaa)", "category": "Kilo"}, {"ind": "Kata sandi", "fr": "Mot de passe", "category": "Kilo"}, {"ind": "Kateam", "fr": "Chef d’équipe", "category": "Kilo"}, {"ind": "Kawal", "fr": "Garde", "category": "Kilo"}, {"ind": "Kawal belakang", "fr": "Arrière-garde", "category": "Kilo"}, {"ind": "Kawal depan", "fr": "Avant-garde", "category": "Kilo"}, {"ind": "Keadaan darurat perang", "fr": "Etat de siège", "category": "Kilo"}, {"ind": "Keadaan perang", "fr": "Etat de guerre", "category": "Kilo"}, {"ind": "Kedar", "fr": "Echelle topographique", "category": "Kilo"}, {"ind": "KPLB", "fr": "Promotion au grade supérieur à titre exceptionnel", "category": "Kilo"}, {"ind": "Kemampuan operasional", "fr": "Capacité opérationnelle", "category": "Kilo"}, {"ind": "Kendaraan lapis baja", "fr": "Véhicule blindé", "category": "Kilo"}, {"ind": "Kendaraan taktis", "fr": "Véhicule tactique", "category": "Kilo"}, {"ind": "Kendaraan tempur", "fr": "Véhicule de combat", "category": "Kilo"}, {"ind": "Kiban", "fr": "Compagnie d’appui", "category": "Kilo"}, {"ind": "Kontra intelijen", "fr": "Contre-espionnage", "category": "Kilo"}, {"ind": "Kowan TNI", "fr": "Personnel féminin de l’armée", "category": "Kilo"}, {"ind": "Kowad", "fr": "Corps féminin de l’armée de terre", "category": "Kilo"}, {"ind": "Kowal", "fr": "Corps féminin de la marine", "category": "Kilo"}, {"ind": "Kolonel", "fr": "Colonel", "category": "Kilo"}, {"ind": "Kudeta", "fr": "Coup d’état", "category": "Kilo"}, {"ind": "Labkrim", "fr": "Laboratoire criminel", "category": "Lima"}, {"ind": "Lambang", "fr": "Emblème", "category": "Lima"}, {"ind": "Lan, pangkalan", "fr": "Base", "category": "Lima"}, {"ind": "Landasan udara", "fr": "Piste d’aviation", "category": "Lima"}, {"ind": "Lanud", "fr": "Base aérienne", "category": "Lima"}, {"ind": "Lapan", "fr": "Institut aérospatial national", "category": "Lima"}, {"ind": "Laskar", "fr": "Franc-tireur", "category": "Lima"}, {"ind": "Latgab", "fr": "Exercice interarmées", "category": "Lima"}, {"ind": "Latpur", "fr": "Exercice de combat", "category": "Lima"}, {"ind": "Lencang kanan (kiri), gerak !", "fr": "A droite (gauche) alignement !", "category": "Lima"}, {"ind": "Letnan", "fr": "Lieutenant", "category": "Lima"}, {"ind": "Letda", "fr": "Sous-lieutenant", "category": "Lima"}, {"ind": "Lettu", "fr": "Lieutenant", "category": "Lima"}, {"ind": "Lintas alam", "fr": "Parcours tout-terrain", "category": "Lima"}, {"ind": "Lintas udara", "fr": "Voie aérienne", "category": "Lima"}, {"ind": "LVRI", "fr": "Légion des anciens combattants indonésiens", "category": "Lima"}, {"ind": "Ma, markas", "fr": "Quartier général", "category": "Mike"}, {"ind": "Mabes AD", "fr": "Quartier général de l’armée de terre", "category": "Mike"}, {"ind": "Mabes AL", "fr": "Quartier général de la marine", "category": "Mike"}, {"ind": "Mabes AU", "fr": "Quartier général de l’armée de l’air", "category": "Mike"}, {"ind": "Mahmil", "fr": "Tribunal militaire", "category": "Mike"}, {"ind": "Maju Jalan !", "fr": "En avant, marche !", "category": "Mike"}, {"ind": "Mako", "fr": "Quartier général de combat", "category": "Mike"}, {"ind": "Marchaling area", "fr": "Zone d’agencement (parachutiste)", "category": "Mike"}, {"ind": "Masa dinas", "fr": "En service", "category": "Mike"}, {"ind": "Medan kritik", "fr": "Terrain critique", "category": "Mike"}, {"ind": "Melambung", "fr": "Envelopper (ennemi)", "category": "Mike"}, {"ind": "Menara pengawas", "fr": "Mirador", "category": "Mike"}, {"ind": "Menwa", "fr": "Régiment d’étudiants", "category": "Mike"}, {"ind": "Menyerbu", "fr": "Prendre d’assaut", "category": "Mike"}, {"ind": "Milsuk", "fr": "Volontaire", "category": "Mike"}, {"ind": "Nama samaran", "fr": "Pseudonyme", "category": "November"}, {"ind": "NIP", "fr": "Numéro d’enregistrement", "category": "November"}, {"ind": "Nominatif", "fr": "Liste nominative", "category": "November"}, {"ind": "Non kombatan", "fr": "Non combattant", "category": "November"}, {"ind": "Non konvensional", "fr": "Non conventionnel", "category": "November"}, {"ind": "Nota dinas", "fr": "Note de service", "category": "November"}, {"ind": "NRP", "fr": "Numéro d’enregistrement d’armée", "category": "November"}, {"ind": "Nubika", "fr": "Nucléaire biologique chimique", "category": "November"}, {"ind": "Oditur", "fr": "Auditeur", "category": "Oscar"}, {"ind": "Oditurat jenderal", "fr": "Auditeur général", "category": "Oscar"}, {"ind": "Oditurat militer", "fr": "Auditeur militaire", "category": "Oscar"}, {"ind": "Olah yudha", "fr": "Exercice", "category": "Oscar"}, {"ind": "Oleat", "fr": "Calque", "category": "Oscar"}, {"ind": "Operasi pagar betis", "fr": "Opération d’encerclement", "category": "Oscar"}, {"ind": "Operasi ampibi", "fr": "Opération amphibie", "category": "Oscar"}, {"ind": "Operasi terselelubung", "fr": "Opération secrète", "category": "Oscar"}, {"ind": "OPM", "fr": "Organisation de l’indépendance de Papou", "category": "Oscar"}, {"ind": "Opsgab", "fr": "Opération interarmées", "category": "Oscar"}, {"ind": "Opslat", "fr": "Opération d’entraînement", "category": "Oscar"}, {"ind": "Opspur", "fr": "Opération de combat", "category": "Oscar"}, {"ind": "Opster", "fr": "Opération territoire", "category": "Oscar"}, {"ind": "Pa, perwira", "fr": "Officier", "category": "Papa"}, {"ind": "Pagar betis", "fr": "Encerclement", "category": "Papa"}, {"ind": "Pama", "fr": "Officier subalterne", "category": "Papa"}, {"ind": "PDH", "fr": "Tenue de sortie", "category": "Papa"}, {"ind": "PDL", "fr": "Tenue de combat", "category": "Papa"}, {"ind": "Paldam", "fr": "Matériel régional", "category": "Papa"}, {"ind": "Palka", "fr": "Cale (bateau)", "category": "Papa"}, {"ind": "Pamen", "fr": "Officier supérieur", "category": "Papa"}, {"ind": "Panglima besar", "fr": "Chef Suprême", "category": "Papa"}, {"ind": "Pangkat", "fr": "Grade", "category": "Papa"}, {"ind": "Pangkat anumerta", "fr": "Grade posthume", "category": "Papa"}, {"ind": "Pangkat kehormatan", "fr": "Grade honorifique", "category": "Papa"}, {"ind": "Paroh", "fr": "Aumônier", "category": "Papa"}, {"ind": "Pasukan khusus", "fr": "Force spéciale", "category": "Papa"}, {"ind": "Paskhas TNI AU", "fr": "Commandos de l’air", "category": "Papa"}, {"ind": "Pasukan Reaksi Cepat", "fr": "Force d’action rapide", "category": "Papa"}, {"ind": "Paspampres", "fr": "Troupes de sécurité présidentielle", "category": "Papa"}, {"ind": "Pati", "fr": "Officier général", "category": "Papa"}, {"ind": "Pekas", "fr": "Trésorier", "category": "Papa"}, {"ind": "Pekas Pusat", "fr": "Agent comptable", "category": "Papa"}, {"ind": "Pelabuhan", "fr": "Port", "category": "Papa"}, {"ind": "Pelontar granat", "fr": "Lance-grenade", "category": "Papa"}, {"ind": "Peluru", "fr": "Balle, obus", "category": "Papa"}, {"ind": "Peluru kendali", "fr": "Missile", "category": "Papa"}, {"ind": "Peluru nuklir", "fr": "Obus nucléaire", "category": "Papa"}, {"ind": "Pendidikan Calon Tamtama", "fr": "Instruction des recrues", "category": "Papa"}, {"ind": "Penembak mahir", "fr": "Tireur d’élite", "category": "Papa"}, {"ind": "Penghadangan", "fr": "Embuscade", "category": "Papa"}, {"ind": "Penghapusan material", "fr": "Réforme du matériel", "category": "Papa"}, {"ind": "Pengintai", "fr": "Guetteur", "category": "Papa"}, {"ind": "Penindakan huru hara", "fr": "Mesure anti-émeute", "category": "Papa"}, {"ind": "Penugasan", "fr": "Affectation", "category": "Papa"}, {"ind": "Penundaan hukuman", "fr": "Sursis", "category": "Papa"}, {"ind": "Perang dingin", "fr": "Guerre froide", "category": "Papa"}, {"ind": "Perang kapal selam", "fr": "Guerre sous-marine", "category": "Papa"}, {"ind": "Perang syaraf", "fr": "Guerre psychologique", "category": "Papa"}, {"ind": "Persenjataan moduler udara darat", "fr": "Armement air-sol modulaire", "category": "Papa"}, {"ind": "Pesawat jet", "fr": "Aviation à réaction", "category": "Papa"}, {"ind": "Pesawat penyerang", "fr": "Avion d’assaut", "category": "Papa"}, {"ind": "Poskotis", "fr": "Poste de commandement tactique", "category": "Papa"}, {"ind": "Prada", "fr": "Soldat 2ème classe", "category": "Papa"}, {"ind": "Pratu", "fr": "Soldat 1ère classe", "category": "Papa"}, {"ind": "Prinlak", "fr": "Ordre d’exécution", "category": "Papa"}, {"ind": "Pundak kanan (kiri) senjata gerak !", "fr": "L’arme sur l’épaule…droite !", "category": "Papa"}, {"ind": "Purnawirawan", "fr": "Retraité", "category": "Papa"}, {"ind": "Pusat penyiaran dan penerimaan berita/sandi", "fr": "Centre de réception et d’émission des messages", "category": "Papa"}, {"ind": "Pusat sambungan telegram", "fr": "Centre automatique des relais télégraphiques électroniques", "category": "Papa"}, {"ind": "Pusenif", "fr": "Ecole d’application de l’infanterie", "category": "Papa"}, {"ind": "Pusjarah", "fr": "Centre historique", "category": "Papa"}, {"ind": "Puskop", "fr": "Centre coopératif", "category": "Papa"}, {"ind": "Pusat latihan pasukan DOM TOM", "fr": "Centre d’aguerrissement Outre-mer et de l‘étranger", "category": "Papa"}, {"ind": "Regu", "fr": "Equipe", "category": "Romeo"}, {"ind": "Renlat", "fr": "Programme d’entraînement", "category": "Romeo"}, {"ind": "Repatriasi", "fr": "Rapatriement", "category": "Romeo"}, {"ind": "Resimen", "fr": "Régiment", "category": "Romeo"}, {"ind": "Rindam", "fr": "Régiment central régional", "category": "Romeo"}, {"ind": "Rudal", "fr": "Missile", "category": "Romeo"}, {"ind": "Rudal jarak sedang", "fr": "Missile Anti Char", "category": "Romeo"}, {"ind": "Sabotase", "fr": "Sabotage", "category": "Sierra"}, {"ind": "Salvo", "fr": "Salve", "category": "Sierra"}, {"ind": "Sandidam", "fr": "Service du chiffre de la région militaire", "category": "Sierra"}, {"ind": "Sangkakala", "fr": "Sonnerie (réveil, appel)", "category": "Sierra"}, {"ind": "Sangkur", "fr": "Baïonnette", "category": "Sierra"}, {"ind": "SARA", "fr": "Ethnie, religion, race, relation entre groupe", "category": "Sierra"}, {"ind": "Sasaran antara", "fr": "Objectif intermédiaire", "category": "Sierra"}, {"ind": "Satuan", "fr": "Unité", "category": "Sierra"}, {"ind": "Satbanpur", "fr": "Unité d’appui", "category": "Sierra"}, {"ind": "Satgab", "fr": "Unité mixte interarmées", "category": "Sierra"}, {"ind": "Secaba", "fr": "Ecole de sous-officiers", "category": "Sierra"}, {"ind": "Secapa", "fr": "Ecole des officiers", "category": "Sierra"}, {"ind": "Secata", "fr": "Ecole du soldat", "category": "Sierra"}, {"ind": "Sekkau", "fr": "Ecole des commandements d’une unité de l’armée de l’air", "category": "Sierra"}, {"ind": "Sesko AU", "fr": "Ecole des commandements des unités de l’armée de l’air", "category": "Sierra"}, {"ind": "Senapan", "fr": "Fusil", "category": "Sierra"}, {"ind": "Senapan teropong", "fr": "Fusil à lunettes", "category": "Sierra"}, {"ind": "Senapan mesin", "fr": "Fusil-mitrailleur", "category": "Sierra"}, {"ind": "Senapan otomatis", "fr": "Fusil automatique", "category": "Sierra"}, {"ind": "Senjata lapis baja", "fr": "Armée blindée", "category": "Sierra"}, {"ind": "Sepatu bot", "fr": "Brodequin", "category": "Sierra"}, {"ind": "Sersan", "fr": "Sergent", "category": "Sierra"}, {"ind": "Serda", "fr": "Sergent, maréchal de logis", "category": "Sierra"}, {"ind": "Serka", "fr": "Adjudant", "category": "Sierra"}, {"ind": "Serma", "fr": "Adjudant-chef", "category": "Sierra"}, {"ind": "Sertu", "fr": "Sergent-chef", "category": "Sierra"}, {"ind": "½ lengan lencang kanan gerak !", "fr": "Au coude à coude à alignement, droite !", "category": "Sierra"}, {"ind": "Setum", "fr": "Secrétariat général", "category": "Sierra"}, {"ind": "Siap gerak", "fr": "Garde-à-vous", "category": "Sierra"}, {"ind": "SUAD", "fr": "Etat-major général de l’armée de terre", "category": "Sierra"}, {"ind": "Surat keputusan", "fr": "Note de service", "category": "Sierra"}, {"ind": "Surat panggilan", "fr": "Convocation", "category": "Sierra"}, {"ind": "Surat perintah", "fr": "Ordre écrit", "category": "Sierra"}, {"ind": "Susgumil", "fr": "Cours spéciaux de professeurs militaires", "category": "Sierra"}, {"ind": "Suslapa", "fr": "Cours supérieur des officiers", "category": "Sierra"}, {"ind": "Suspa", "fr": "Cours destiné aux officiers", "category": "Sierra"}, {"ind": "Sussarcab", "fr": "Formation de base de l’armée", "category": "Sierra"}, {"ind": "Ta, Tamtama", "fr": "Militaire du rang", "category": "Tango"}, {"ind": "Tabak, tamtama penembak", "fr": "Tireur", "category": "Tango"}, {"ind": "Tabel organisasi dan peralatan", "fr": "Tableau des effectifs et des dotations", "category": "Tango"}, {"ind": "Tamtama pemasak", "fr": "Cuisinier", "category": "Tango"}, {"ind": "Tanah air", "fr": "Patrie", "category": "Tango"}, {"ind": "Tanda jasa", "fr": "Décoration", "category": "Tango"}, {"ind": "Tank amphibie", "fr": "Char amphibie", "category": "Tango"}, {"ind": "Tank anti ranjau", "fr": "Char anti-mine", "category": "Tango"}, {"ind": "Tar, taruna", "fr": "Cadet", "category": "Tango"}, {"ind": "Tas punggung", "fr": "Sac-à-dos", "category": "Tango"}, {"ind": "TBO, Tenaga Bantuan Operasi", "fr": "Renforts opérationnels", "category": "Tango"}, {"ind": "Tegak gerak !", "fr": "Fixe !", "category": "Tango"}, {"ind": "Tegak senjata Gerak !", "fr": "Reposez… Armes !", "category": "Tango"}, {"ind": "Tembakan penghambat", "fr": "Coup d’arrêt", "category": "Tango"}, {"ind": "Tempat pembuatan senjata", "fr": "Armurerie", "category": "Tango"}, {"ind": "Tenda", "fr": "Tente", "category": "Tango"}, {"ind": "Terjun bebas", "fr": "Chute libre", "category": "Tango"}, {"ind": "Terjun tempur", "fr": "Saut opérationnel", "category": "Tango"}, {"ind": "Tinggal landas", "fr": "Décollage", "category": "Tango"}, {"ind": "Titik Kordinat", "fr": "Coordonnées d’un point", "category": "Tango"}, {"ind": "TOA, tour of area", "fr": "Tour de Zone", "category": "Tango"}, {"ind": "TOD, Tour of duty", "fr": "Tour de service", "category": "Tango"}, {"ind": "Ton, peleton", "fr": "Peloton", "category": "Tango"}, {"ind": "Ton bantuan", "fr": "Section d’appui", "category": "Tango"}, {"ind": "Ton senapan", "fr": "Section fusiliers", "category": "Tango"}, {"ind": "Tawanan perang", "fr": "Prisonniers de guerre", "category": "Tango"}, {"ind": "Tugas pokok", "fr": "Mission", "category": "Tango"}, {"ind": "TUM, Tata Upacara Militer", "fr": "Cérémonial militaire", "category": "Tango"}, {"ind": "Tunjab", "fr": "Allocation de fonction", "category": "Tango"}, {"ind": "Ub, untuk beliau", "fr": "Pour lui", "category": "Uniform"}, {"ind": "Udara", "fr": "Air", "category": "Uniform"}, {"ind": "Udk, untuk diketahui", "fr": "A toutes fins utiles, pour information", "category": "Uniform"}, {"ind": "Ujian coba menembak", "fr": "Tir d’essai", "category": "Uniform"}, {"ind": "UKP", "fr": "Proposition de passage au grade supérieur", "category": "Uniform"}, {"ind": "ULP", "fr": "Allocation alimentaire", "category": "Uniform"}, {"ind": "Upacara bendera", "fr": "Cérémonie des couleurs", "category": "Uniform"}, {"ind": "Urdal", "fr": "Affaires internes", "category": "Uniform"}, {"ind": "Utara geografi", "fr": "Nord géographique", "category": "Uniform"}, {"ind": "Utara magnetis", "fr": "Nord magnétique", "category": "Uniform"}, {"ind": "Utara peta", "fr": "Nord de la carte", "category": "Uniform"}, {"ind": "Utara sebenarnya", "fr": "Nord réel", "category": "Uniform"}, {"ind": "UU", "fr": "Lois", "category": "Uniform"}, {"ind": "UUD", "fr": "Constitution", "category": "Uniform"}, {"ind": "UUDS", "fr": "Constitution provisoire", "category": "Uniform"}, {"ind": "VHF", "fr": "Très haute fréquence", "category": "Victor"}, {"ind": "Waas, wakil asisten", "fr": "Assistant adjoint", "category": "Whisky"}, {"ind": "Wadan", "fr": "Adjoint au commandant", "category": "Whisky"}, {"ind": "Wadanyon", "fr": "Adjoint au chef de Bataillon", "category": "Whisky"}, {"ind": "Wajib militer", "fr": "Service militaire obligatoire", "category": "Whisky"}, {"ind": "Waka", "fr": "Adjoint au chef", "category": "Whisky"}, {"ind": "Wakapus", "fr": "Adjoint au chef du centre", "category": "Whisky"}, {"ind": "Wakasad", "fr": "Adjoint au chef d’état Major", "category": "Whisky"}, {"ind": "Wamil", "fr": "Conscription", "category": "Whisky"}, {"ind": "Wanjakti", "fr": "Commission d’avancement", "category": "Whisky"}, {"ind": "Wara", "fr": "Personnel féminin de l’armée de l’air", "category": "Whisky"}, {"ind": "Wasrik", "fr": "Inspection et vérification", "category": "Whisky"}, {"ind": "Wing dik", "fr": "Escadrille d’instruction", "category": "Whisky"}, {"ind": "Yah, wilayah", "fr": "Région, zone", "category": "Yankee"}, {"ind": "Yon, batalyon", "fr": "Bataillon", "category": "Yankee"}, {"ind": "Yon Ang", "fr": "Bataillon de transport", "category": "Yankee"}, {"ind": "Yon arhanudri", "fr": "Bataillon d’artillerie légère sol-air", "category": "Yankee"}, {"ind": "Yon arhanudse", "fr": "Bataillon d’artillerie moyenne sol-air", "category": "Yankee"}, {"ind": "Yon Hub", "fr": "Bataillon de transmission", "category": "Yankee"}, {"ind": "Yonif", "fr": "Bataillon d’infanterie", "category": "Yankee"}, {"ind": "Yon kav", "fr": "Bataillon de cavalerie", "category": "Yankee"}, {"ind": "Yon kavtai", "fr": "Bataillon blindé de reconnaissance", "category": "Yankee"}, {"ind": "Yon kes", "fr": "Bataillon de service de santé", "category": "Yankee"}, {"ind": "Yon linud", "fr": "Bataillon d’infanterie aéroportée", "category": "Yankee"}, {"ind": "Yon mar", "fr": "Bataillon de la marine", "category": "Yankee"}, {"ind": "Yon Pur", "fr": "Bataillon de combat", "category": "Yankee"}, {"ind": "Yon zikon", "fr": "Bataillon du génie des travaux", "category": "Yankee"}, {"ind": "Yon zipur", "fr": "Bataillon du génie des combats", "category": "Yankee"}, {"ind": "Zi, Zeni", "fr": "Génie", "category": "Zulu"}, {"ind": "Zidam", "fr": "Génie régional", "category": "Zulu"}, {"ind": "Zikon", "fr": "Génie des travaux", "category": "Zulu"}, {"ind": "Zipur", "fr": "Génie des combats", "category": "Zulu"}];
+
+        function checkPassword(e) {
+            e.preventDefault();
+            const input = document.getElementById('passwordInput').value;
+            if (input === 'ksn2026') {
+                document.getElementById('loginOverlay').style.opacity = '0';
+                document.getElementById('loginOverlay').style.visibility = 'hidden';
+                document.getElementById('appContainer').style.display = 'block';
+                renderList(entries);
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+                document.getElementById('passwordInput').value = '';
+                document.getElementById('passwordInput').focus();
+            }
+        }
+
+        function renderList(data) {
+            const container = document.getElementById('dictionaryList');
+            const stats = document.getElementById('statsText');
+            
+            stats.textContent = `${data.length} terme(s) trouvé(s)`;
+
+            if (data.length === 0) {
+                container.innerHTML = '<div class="no-results">Aucun terme trouvé correspondant à votre recherche.</div>';
+                return;
+            }
+
+            let htmlBuf = '';
+            for (let i = 0; i < data.length; i++) {
+                const item = data[i];
+                htmlBuf += `
+                    <div class="dictionary-item">
+                        <div class="lang-row">
+                            <span class="flag-icon">🇮🇩</span>
+                            <span class="lang-text ind">${escapeHtml(item.ind)}</span>
+                        </div>
+                        <div class="divider"></div>
+                        <div class="lang-row">
+                            <span class="flag-icon">🇫🇷</span>
+                            <span class="lang-text fr">${escapeHtml(item.fr)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+            container.innerHTML = htmlBuf;
+        }
+
+        function handleSearch() {
+            const query = document.getElementById('searchInput').value.toLowerCase().trim();
+            const clearBtn = document.getElementById('clearBtn');
+            
+            if (query.length > 0) {
+                clearBtn.style.display = 'block';
+            } else {
+                clearBtn.style.display = 'none';
+            }
+
+            const filtered = entries.filter(item => 
+                item.ind.toLowerCase().includes(query) || 
+                item.fr.toLowerCase().includes(query)
+            );
+
+            renderList(filtered);
+        }
+
+        function clearSearch() {
+            document.getElementById('searchInput').value = '';
+            handleSearch();
+            document.getElementById('searchInput').focus();
+        }
+
+        function escapeHtml(text) {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
